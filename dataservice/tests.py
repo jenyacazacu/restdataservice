@@ -88,13 +88,7 @@ class ApiTests(APITestCase):
         Test aggregate endpoint for an existing field
         """
         self.assertTrue(self.authenticated)
-        data = {'filename':'sample_row', 'description':'test a sample row froma file'}
-        with open(self.sample_row_file_path, 'r') as fp:
-            data['file'] = fp
-            response = self.client.post(self.datafile_url, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.uploaded_files.append(response.data['file'][17:])
-        aggregate_field = "event_duratio"
+        aggregate_field = "event_duration"
         url = "{0}{1}/{2}".format(self.aggregate_url,'999', aggregate_field)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -112,6 +106,23 @@ class ApiTests(APITestCase):
         self.uploaded_files.append(response.data['file'][17:])
         file_id = response.data['id']
         aggregate_field = "event_duration"
+        url = "{0}{1}/{2}".format(self.aggregate_url, file_id, aggregate_field)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_aggregate_for_non_numeric_field(self):
+        """
+        Test aggregate endpoint for an existing field
+        """
+        self.assertTrue(self.authenticated)
+        data = {'filename':'sample_row', 'description':'test a sample row froma file'}
+        with open(self.bad_sample_file_path, 'r') as fp:
+            data['file'] = fp
+            response = self.client.post(self.datafile_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.uploaded_files.append(response.data['file'][17:])
+        file_id = response.data['id']
+        aggregate_field = "layer"
         url = "{0}{1}/{2}".format(self.aggregate_url, file_id, aggregate_field)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
