@@ -7,8 +7,8 @@ from common.util import create_admin
 
 class ApiTests(APITestCase):
     def setUp(self):
-        self.datafile_url = 'http://localhost:8000/api/datafile/'
-        self.aggregate_url = 'http://localhost:8000/api/aggregate/'
+        self.datafile_url = '/api/datafile/'
+        self.aggregate_url = '/api/aggregate/'
         self.admin = create_admin()
         self.authenticated = self.client.login(username='admin', password='admin')
         self.good_sample_file_path = os.path.join(os.path.dirname(__file__), 'test_data/JDS_Sample-phone_20140401_10k.json')
