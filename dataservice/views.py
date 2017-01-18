@@ -15,6 +15,22 @@ class DataFileViewSet(viewsets.ModelViewSet):
     queryset = DataFile.objects.all().order_by('-upload_datetime')
     serializer_class = DataFileSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    def create(self, request):
+        file_obj = request.data['file']
+        if not file_obj or file_obj.content_type != 'application/json':
+            return Response({'details':"Upload must include a JSON readable file."}, status.HTTP_400_BAD_REQUEST)
+        # ...
+        # upload file to a service if we need to and only store the url in the  models
+        # for this purpose we will keep it simple and save the file with the model
+        # ...
+        uploaded_file = DataFile(filename=request.data['filename'] or file_obj.name,
+                                 description=request.data['description'],
+                                 file=file_obj)
+        uploaded_file.save()
+        data = DataFileSerializer(uploaded_file).data
+        data['file'] = request.build_absolute_uri(uploaded_file.file.url)
+        return Response(data, status.HTTP_201_CREATED)
+
 
 class AggregateView(APIView):
     """

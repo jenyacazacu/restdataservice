@@ -43,7 +43,7 @@ class ApiTests(APITestCase):
         Test datafile endpoint without providing a file
         """
         self.assertTrue(self.authenticated)
-        data = {'filename':'test_file', 'description':'test description'}
+        data = {'filename':'test_file', 'description':'test description', 'file':''}
         response = self.client.post(self.datafile_url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(DataFile.objects.count(), 0)
