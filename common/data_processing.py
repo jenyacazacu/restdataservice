@@ -28,16 +28,6 @@ def raw_aggregate(df, key):
             return find_sum(dataframe, item, key)
     return (None, 'Field not found', status.HTTP_404_NOT_FOUND)
 
-def raw_aggregate(df, key):
-    if key in df.keys():
-        return simple_sum(df, key)
-    key_map = {item:[] for item in df.keys()}
-    for item in key_map.keys():
-        if key_finder(df, item, key):
-            dataframe = pa.DataFrame(df[item])
-            return find_sum(dataframe, item, key)
-    return (None, 'Field not found', status.HTTP_404_NOT_FOUND)
-
 def build_key_map(df):
     key_map = {item:[] for item in df.keys()}
     for item in key_map.keys():

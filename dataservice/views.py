@@ -10,7 +10,7 @@ import ast
 
 class DataFileViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows datafiles to be viewed or edited.
+    API endpoint that allows datafiles to be viewed.
     """
     queryset = DataFile.objects.all().order_by('-upload_datetime')
     serializer_class = DataFileSerializer
